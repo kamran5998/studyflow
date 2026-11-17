@@ -1,0 +1,6 @@
+{
+  "name": "StudyPilot AI",
+  "description": "AI-powered adaptive study planner with explainable weakness diagnostics and intelligent scheduling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
