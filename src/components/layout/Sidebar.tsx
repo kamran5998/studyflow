@@ -39,10 +39,17 @@ export const Sidebar: React.FC = () => {
     {
       label: "NOTEBOOK",
       items: [
+<<<<<<< HEAD
         { id: "dashboard", label: "Dashboard", icon: LayoutGrid },
         {
           id: "planner",
           label: "Planner",
+=======
+        { id: "dashboard", label: "Desk & Overview", icon: LayoutGrid },
+        {
+          id: "planner",
+          label: "Daily Planner",
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
           icon: CalendarDays,
           badge: pendingTasksCount > 0 ? pendingTasksCount : undefined,
         },
@@ -52,10 +59,17 @@ export const Sidebar: React.FC = () => {
     {
       label: "CURRICULUM",
       items: [
+<<<<<<< HEAD
         { id: "subjects", label: "Subjects", icon: BookOpen },
         {
           id: "exams",
           label: "Exams",
+=======
+        { id: "subjects", label: "Courses & Topics", icon: BookOpen },
+        {
+          id: "exams",
+          label: "Exam Timetable",
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
           icon: GraduationCap,
           badge: upcomingExamsCount > 0 ? upcomingExamsCount : undefined,
         },
@@ -65,13 +79,22 @@ export const Sidebar: React.FC = () => {
       label: "STUDY AIDS",
       items: [
         { id: "roadmap", label: "Study Roadmap", icon: Compass },
+<<<<<<< HEAD
         { id: "quizzes", label: "AI Practice Quiz", icon: HelpCircle },
         { id: "summarizer", label: "AI Summarizer", icon: FileText },
+=======
+        { id: "quizzes", label: "Recall & Quizzes", icon: HelpCircle },
+        { id: "summarizer", label: "Lecture Notes", icon: FileText },
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
       ],
     },
     {
       label: "LEDGER",
+<<<<<<< HEAD
       items: [{ id: "analytics", label: "Analytics", icon: BarChart3 }],
+=======
+      items: [{ id: "analytics", label: "Hours & Analytics", icon: BarChart3 }],
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     },
   ];
 
@@ -163,7 +186,11 @@ export const Sidebar: React.FC = () => {
             )}
             strokeWidth={1.75}
           />
+<<<<<<< HEAD
           <span>Settings</span>
+=======
+          <span>Notebook Settings</span>
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         </button>
       </div>
     </aside>

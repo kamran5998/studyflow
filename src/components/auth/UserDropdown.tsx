@@ -90,7 +90,11 @@ export const UserDropdown: React.FC<UserDropdownProps> = () => {
               className="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-[#FAF8F4] dark:hover:bg-[#2A2823] transition-colors text-left cursor-pointer"
             >
               <Settings className="w-3.5 h-3.5 text-[#78736A]" />
+<<<<<<< HEAD
               <span>Settings</span>
+=======
+              <span>Notebook Settings</span>
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
             </button>
           </div>
 

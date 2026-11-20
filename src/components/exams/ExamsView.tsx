@@ -68,7 +68,11 @@ export const ExamsView: React.FC = () => {
         kicker="EXAMINATION TIMETABLE"
         pill="MILESTONES"
         pillTone="crimson"
+<<<<<<< HEAD
         title="Exams"
+=======
+        title="Exam Timetable & Readiness"
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         subtitle="Countdown timestamps, syllabus preparation targets, and live readiness diagnostics."
         actions={
           <PrimaryButton id="add-exam-btn" onClick={handleOpenAdd}>

@@ -114,7 +114,11 @@ export const KamranAssistant: React.FC = () => {
   const handleActionClick = (action: ChatMessageAction) => {
     if (action.type === "open_planner") {
       setActivePage("planner");
+<<<<<<< HEAD
       showToast("Opened Planner");
+=======
+      showToast("Opened Daily Planner");
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     } else if (action.type === "start_quiz") {
       if (action.payload) {
         setQuizPreset({
@@ -123,16 +127,27 @@ export const KamranAssistant: React.FC = () => {
         });
       }
       setActivePage("quizzes");
+<<<<<<< HEAD
       showToast("AI Practice Quiz opened");
     } else if (action.type === "open_exam") {
       setActivePage("exams");
       showToast("Exams opened");
+=======
+      showToast("Recall & Quizzes opened");
+    } else if (action.type === "open_exam") {
+      setActivePage("exams");
+      showToast("Exam Timetable opened");
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     } else if (action.type === "start_focus") {
       setActivePage("focus");
       showToast("Focus Session opened");
     } else if (action.type === "open_summarizer") {
       setActivePage("summarizer");
+<<<<<<< HEAD
       showToast("AI Summarizer opened");
+=======
+      showToast("Lecture Notes opened");
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     } else if (action.type === "open_roadmap") {
       setActivePage("roadmap");
       showToast("Study Roadmap opened");

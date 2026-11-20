@@ -44,7 +44,11 @@ export const SubjectsView: React.FC = () => {
         kicker="CURRICULUM LEDGER"
         pill={`${subjects.length} REGISTERED`}
         pillTone="amber"
+<<<<<<< HEAD
         title="Subjects"
+=======
+        title="Courses & Syllabus Coverage"
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         subtitle="Track topic mastery, syllabus checklists, and accumulated focus time per course."
         actions={
           <>

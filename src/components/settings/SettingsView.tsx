@@ -72,9 +72,15 @@ export const SettingsView: React.FC = () => {
       {/* Page Header */}
       <PageHeader
         kicker="SYSTEM"
+<<<<<<< HEAD
         pill="SETTINGS"
         pillTone="amber"
         title="Settings"
+=======
+        pill="NOTEBOOK SETTINGS"
+        pillTone="amber"
+        title="Notebook Settings"
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         subtitle="Manage your student identity details and editorial workspace theme."
         actions={
           <KickerPill tone="sage" dashed={false}>

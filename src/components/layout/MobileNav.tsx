@@ -33,19 +33,33 @@ export const MobileNav: React.FC<MobileNavProps> = ({
   const { currentUser, isAuthenticated, setAuthModalOpen, logout } = useAuth();
 
   const primaryTabs: { id: PageId; label: string; icon: React.ElementType }[] = [
+<<<<<<< HEAD
     { id: "dashboard", label: "Dashboard", icon: LayoutGrid },
     { id: "planner", label: "Planner", icon: CalendarDays },
     { id: "focus", label: "Focus", icon: Timer },
     { id: "subjects", label: "Subjects", icon: BookOpen },
+=======
+    { id: "dashboard", label: "Desk", icon: LayoutGrid },
+    { id: "planner", label: "Planner", icon: CalendarDays },
+    { id: "focus", label: "Focus", icon: Timer },
+    { id: "subjects", label: "Courses", icon: BookOpen },
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     { id: "exams", label: "Exams", icon: GraduationCap },
   ];
 
   const secondaryTabs: { id: PageId; label: string; icon: React.ElementType }[] = [
     { id: "roadmap", label: "Study Roadmap", icon: Compass },
+<<<<<<< HEAD
     { id: "quizzes", label: "AI Practice Quiz", icon: HelpCircle },
     { id: "summarizer", label: "AI Summarizer", icon: FileText },
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "settings", label: "Settings", icon: Settings },
+=======
+    { id: "quizzes", label: "Recall & Quizzes", icon: HelpCircle },
+    { id: "summarizer", label: "Lecture Notes", icon: FileText },
+    { id: "analytics", label: "Hours & Analytics", icon: BarChart3 },
+    { id: "settings", label: "Notebook Settings", icon: Settings },
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
   ];
 
   return (

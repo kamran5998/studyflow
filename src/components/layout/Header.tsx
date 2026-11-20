@@ -20,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   const pageBreadcrumbs: Record<PageId, { section: string; title: string }> = {
+<<<<<<< HEAD
     dashboard: { section: "WORKSPACE", title: "Dashboard" },
     planner: { section: "DAILY FOCUS", title: "Planner" },
     focus: { section: "DEEP WORK", title: "Focus Timer" },
@@ -32,11 +33,29 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileMenu }) => {
     analytics: { section: "LEDGER", title: "Analytics" },
     profile: { section: "SYSTEM", title: "Settings" },
     settings: { section: "SYSTEM", title: "Settings" },
+=======
+    dashboard: { section: "WORKSPACE", title: "Desk & Overview" },
+    planner: { section: "DAILY FOCUS", title: "Study Planner & Tasks" },
+    focus: { section: "DEEP WORK", title: "Focus Timer" },
+    subjects: { section: "CURRICULUM", title: "Course Syllabus" },
+    exams: { section: "MILESTONES", title: "Exam Timetable & Readiness" },
+    assignments: { section: "CURRICULUM", title: "Assignments & Deadlines" },
+    roadmap: { section: "STUDY AIDS", title: "Study Roadmap" },
+    quizzes: { section: "STUDY AIDS", title: "Recall & Quizzes" },
+    summarizer: { section: "STUDY AIDS", title: "Lecture Notes" },
+    analytics: { section: "LEDGER", title: "Hours & Analytics" },
+    profile: { section: "SYSTEM", title: "Notebook Settings" },
+    settings: { section: "SYSTEM", title: "Notebook Settings" },
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
   };
 
   const currentMeta = pageBreadcrumbs[activePage] || {
     section: "WORKSPACE",
+<<<<<<< HEAD
     title: "Dashboard",
+=======
+    title: "Desk & Overview",
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
   };
 
   return (

@@ -11,6 +11,7 @@ import {
 } from "./src/server/recommendationEngine";
 import { computeLearningAnalytics } from "./src/server/analyticsEngine";
 import { generateWeightageOptimizedPlan } from "./src/lib/examCalculations";
+<<<<<<< HEAD
 import { requireAuth, AuthRequest } from "./src/middleware/auth.ts";
 import { getOrCreateUser, updateUserProfile } from "./src/db/users.ts";
 import {
@@ -20,11 +21,15 @@ import {
   getUserRoadmaps,
   saveUserRoadmaps,
 } from "./src/db/workspace.ts";
+=======
+import { dbStore } from "./src/server/db";
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
 
 function isPlainObject(val: unknown): val is Record<string, any> {
   return Boolean(val) && typeof val === "object" && !Array.isArray(val);
 }
 
+<<<<<<< HEAD
 function toPublicAccount(userRow: any) {
   return {
     id: userRow.uid,
@@ -48,6 +53,55 @@ function toPublicAccount(userRow: any) {
     focusScore: Number(userRow.focusScore ?? 0),
     streakDays: Number(userRow.streakDays ?? 0),
   };
+=======
+function parseCookies(cookieHeader?: string): Record<string, string> {
+  const result: Record<string, string> = {};
+  if (!cookieHeader) return result;
+  for (const part of cookieHeader.split(";")) {
+    const idx = part.indexOf("=");
+    if (idx <= 0) continue;
+    const key = decodeURIComponent(part.slice(0, idx).trim());
+    const val = decodeURIComponent(part.slice(idx + 1).trim());
+    result[key] = val;
+  }
+  return result;
+}
+
+function buildCookieAttrs(req: express.Request, maxAgeSeconds?: number): string {
+  const isHttps =
+    req.secure ||
+    String(req.headers["x-forwarded-proto"] || "")
+      .toLowerCase()
+      .includes("https");
+  const attrs = ["Path=/", "HttpOnly"];
+  if (typeof maxAgeSeconds === "number") {
+    attrs.push(`Max-Age=${maxAgeSeconds}`);
+  }
+  if (isHttps) {
+    attrs.push("SameSite=None", "Secure");
+  } else {
+    attrs.push("SameSite=Lax");
+  }
+  return attrs.join("; ");
+}
+
+function setSessionCookie(req: express.Request, res: express.Response, token: string, rememberMe = true) {
+  const maxAge = rememberMe ? 60 * 60 * 24 * 30 : undefined; // 30 days or session
+  const sessionCookie = `sp_session=${encodeURIComponent(token)}; ${buildCookieAttrs(req, maxAge)}`;
+  const clearSignedOut = `sp_signed_out=; ${buildCookieAttrs(req, 0)}`;
+  res.setHeader("Set-Cookie", [sessionCookie, clearSignedOut]);
+}
+
+function setSignedOutCookies(req: express.Request, res: express.Response) {
+  const clearSession = `sp_session=; ${buildCookieAttrs(req, 0)}`;
+  const signedOutCookie = `sp_signed_out=1; ${buildCookieAttrs(req, 60 * 60 * 24 * 30)}`;
+  res.setHeader("Set-Cookie", [clearSession, signedOutCookie]);
+}
+
+function getSessionToken(req: express.Request): string | undefined {
+  const cookies = parseCookies(req.headers.cookie);
+  return cookies["sp_session"] || (typeof req.headers["x-studypilot-session"] === "string" ? req.headers["x-studypilot-session"] : undefined);
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
 }
 
 const app = express();
@@ -56,6 +110,7 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json({ limit: "10mb" }));
 
+<<<<<<< HEAD
 // ======================== CLOUD SQL & FIREBASE AUTH API ========================
 
 app.get("/api/auth/me", requireAuth, async (req: AuthRequest, res) => {
@@ -128,10 +183,232 @@ app.get("/api/workspace", requireAuth, async (req: AuthRequest, res) => {
 });
 
 app.put("/api/workspace", requireAuth, async (req: AuthRequest, res) => {
+=======
+// ======================== SERVER PERSISTENCE & AUTH API ========================
+
+app.get("/api/auth/me", async (req, res) => {
+  try {
+    const cookies = parseCookies(req.headers.cookie);
+    const token = getSessionToken(req);
+    const isSignedOut = cookies["sp_signed_out"] === "1";
+    const state = await dbStore.getAuthState(token, isSignedOut);
+    if (state.createdToken) {
+      setSessionCookie(req, res, state.createdToken, true);
+    }
+    return res.json({
+      currentUser: state.currentUser,
+      isAuthenticated: state.isAuthenticated,
+      accounts: state.accounts,
+      activeSessions: state.activeSessions,
+    });
+  } catch (err) {
+    console.error("[Auth Me Error]:", err);
+    return res.status(500).json({ error: "Failed to load authentication state" });
+  }
+});
+
+app.post("/api/auth/login", async (req, res) => {
   try {
     if (!isPlainObject(req.body)) {
       return res.status(400).json({ error: "Request body must be a JSON object" });
     }
+    const { email, password, rememberMe = true } = req.body;
+    if (typeof email !== "string" || typeof password !== "string") {
+      return res.status(400).json({ success: false, error: "Email and password are required." });
+    }
+    const ua = String(req.headers["user-agent"] || "");
+    const result = await dbStore.login(email, password, {
+      device: ua.includes("Mobile") ? "Mobile Device" : "Desktop Computer",
+      browser: ua.includes("Chrome") ? "Chrome" : ua.includes("Firefox") ? "Firefox" : "Web Browser",
+      ip: req.ip || "127.0.0.1",
+    });
+    if (!result.success || !result.token) {
+      return res.status(401).json({ success: false, error: result.error || "Invalid credentials" });
+    }
+    setSessionCookie(req, res, result.token, Boolean(rememberMe));
+    const state = await dbStore.getAuthState(result.token, false);
+    return res.json({
+      success: true,
+      currentUser: state.currentUser,
+      accounts: state.accounts,
+      activeSessions: state.activeSessions,
+    });
+  } catch (err) {
+    console.error("[Auth Login Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to sign in" });
+  }
+});
+
+app.post("/api/auth/google", async (req, res) => {
+  try {
+    const ua = String(req.headers["user-agent"] || "");
+    const result = await dbStore.loginPrimaryDemo({
+      device: ua.includes("Mobile") ? "Mobile Device" : "Desktop Computer",
+      browser: "Google OAuth Session",
+      ip: req.ip || "127.0.0.1",
+    });
+    if (!result.success || !result.token) {
+      return res.status(401).json({ success: false, error: result.error || "Sign in failed" });
+    }
+    setSessionCookie(req, res, result.token, true);
+    const state = await dbStore.getAuthState(result.token, false);
+    return res.json({
+      success: true,
+      currentUser: state.currentUser,
+      accounts: state.accounts,
+      activeSessions: state.activeSessions,
+    });
+  } catch (err) {
+    console.error("[Auth Google Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to sign in" });
+  }
+});
+
+app.post("/api/auth/register", async (req, res) => {
+  try {
+    if (!isPlainObject(req.body)) {
+      return res.status(400).json({ success: false, error: "Request body must be a JSON object" });
+    }
+    const result = await dbStore.register(req.body as any);
+    if (!result.success || !result.token) {
+      return res.status(400).json({ success: false, error: result.error || "Registration failed" });
+    }
+    setSessionCookie(req, res, result.token, true);
+    const state = await dbStore.getAuthState(result.token, false);
+    return res.status(201).json({
+      success: true,
+      currentUser: state.currentUser,
+      accounts: state.accounts,
+      activeSessions: state.activeSessions,
+    });
+  } catch (err) {
+    console.error("[Auth Register Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to create account" });
+  }
+});
+
+app.post("/api/auth/logout", async (req, res) => {
+  try {
+    const token = getSessionToken(req);
+    await dbStore.logout(token);
+    setSignedOutCookies(req, res);
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("[Auth Logout Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to sign out" });
+  }
+});
+
+app.post("/api/auth/switch", async (req, res) => {
+  try {
+    if (!isPlainObject(req.body) || typeof req.body.userId !== "string") {
+      return res.status(400).json({ success: false, error: "userId is required" });
+    }
+    const result = await dbStore.switchAccount(req.body.userId);
+    if (!result.success || !result.token) {
+      return res.status(404).json({ success: false, error: result.error || "Account not found" });
+    }
+    setSessionCookie(req, res, result.token, true);
+    const state = await dbStore.getAuthState(result.token, false);
+    return res.json({
+      success: true,
+      currentUser: state.currentUser,
+      accounts: state.accounts,
+      activeSessions: state.activeSessions,
+    });
+  } catch (err) {
+    console.error("[Auth Switch Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to switch account" });
+  }
+});
+
+app.patch("/api/auth/account", async (req, res) => {
+  try {
+    if (!isPlainObject(req.body)) {
+      return res.status(400).json({ success: false, error: "Request body must be a JSON object" });
+    }
+    const userId = await dbStore.resolveUserId(getSessionToken(req));
+    if (userId === "guest") {
+      return res.status(401).json({ success: false, error: "Authentication required" });
+    }
+    const result = await dbStore.updateAccount(userId, req.body);
+    if (!result.success) {
+      return res.status(404).json(result);
+    }
+    return res.json(result);
+  } catch (err) {
+    console.error("[Auth Update Account Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to update account" });
+  }
+});
+
+app.post("/api/auth/change-password", async (req, res) => {
+  try {
+    if (!isPlainObject(req.body)) {
+      return res.status(400).json({ success: false, error: "Request body must be a JSON object" });
+    }
+    const userId = await dbStore.resolveUserId(getSessionToken(req));
+    if (userId === "guest") {
+      return res.status(401).json({ success: false, error: "You must be signed in to change password." });
+    }
+    const result = await dbStore.changePassword(
+      userId,
+      String(req.body.oldPassword || ""),
+      String(req.body.newPassword || "")
+    );
+    return res.status(result.success ? 200 : 400).json(result);
+  } catch (err) {
+    console.error("[Change Password Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to change password" });
+  }
+});
+
+app.post("/api/auth/reset-password", async (req, res) => {
+  try {
+    if (!isPlainObject(req.body) || typeof req.body.email !== "string") {
+      return res.status(400).json({ success: false, message: "Registered email address is required." });
+    }
+    const result = await dbStore.resetPassword(req.body.email);
+    return res.status(result.success ? 200 : 404).json(result);
+  } catch (err) {
+    console.error("[Reset Password Error]:", err);
+    return res.status(500).json({ success: false, message: "Failed to reset password" });
+  }
+});
+
+app.delete("/api/auth/sessions/:sessionId", async (req, res) => {
+  try {
+    const userId = await dbStore.resolveUserId(getSessionToken(req));
+    if (userId === "guest") {
+      return res.status(401).json({ success: false, error: "Authentication required" });
+    }
+    await dbStore.revokeSession(userId, req.params.sessionId);
+    const state = await dbStore.getAuthState(getSessionToken(req), false);
+    return res.json({ success: true, activeSessions: state.activeSessions });
+  } catch (err) {
+    console.error("[Revoke Session Error]:", err);
+    return res.status(500).json({ success: false, error: "Failed to revoke session" });
+  }
+});
+
+app.get("/api/workspace", async (req, res) => {
+  try {
+    const userKey = await dbStore.resolveUserId(getSessionToken(req));
+    const workspace = await dbStore.getWorkspace(userKey);
+    return res.json({ userKey, workspace });
+  } catch (err) {
+    console.error("[Get Workspace Error]:", err);
+    return res.status(500).json({ error: "Failed to load workspace from server" });
+  }
+});
+
+app.put("/api/workspace", async (req, res) => {
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
+  try {
+    if (!isPlainObject(req.body)) {
+      return res.status(400).json({ error: "Request body must be a JSON object" });
+    }
+<<<<<<< HEAD
     const firebaseUser = req.user!;
     const saved = await saveUserWorkspace(
       firebaseUser.uid,
@@ -186,10 +463,45 @@ app.get("/api/roadmaps", requireAuth, async (req: AuthRequest, res) => {
 });
 
 app.put("/api/roadmaps", requireAuth, async (req: AuthRequest, res) => {
+=======
+    const userKey = await dbStore.resolveUserId(getSessionToken(req));
+    const saved = await dbStore.saveWorkspace(userKey, req.body);
+    return res.json({ userKey, workspace: saved });
+  } catch (err) {
+    console.error("[Save Workspace Error]:", err);
+    return res.status(500).json({ error: "Failed to save workspace to server" });
+  }
+});
+
+app.post("/api/workspace/reset", async (req, res) => {
+  try {
+    const userKey = await dbStore.resolveUserId(getSessionToken(req));
+    const workspace = await dbStore.resetWorkspace(userKey);
+    return res.json({ userKey, workspace });
+  } catch (err) {
+    console.error("[Reset Workspace Error]:", err);
+    return res.status(500).json({ error: "Failed to reset workspace" });
+  }
+});
+
+app.get("/api/roadmaps", async (req, res) => {
+  try {
+    const userKey = await dbStore.resolveUserId(getSessionToken(req));
+    const roadmaps = await dbStore.getRoadmaps(userKey);
+    return res.json({ userKey, ...roadmaps });
+  } catch (err) {
+    console.error("[Get Roadmaps Error]:", err);
+    return res.status(500).json({ error: "Failed to load roadmaps" });
+  }
+});
+
+app.put("/api/roadmaps", async (req, res) => {
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
   try {
     if (!isPlainObject(req.body)) {
       return res.status(400).json({ error: "Request body must be a JSON object" });
     }
+<<<<<<< HEAD
     const firebaseUser = req.user!;
     const saved = await saveUserRoadmaps(
       firebaseUser.uid,
@@ -204,6 +516,14 @@ app.put("/api/roadmaps", requireAuth, async (req: AuthRequest, res) => {
     return res
       .status(500)
       .json({ error: err?.message || "Failed to save roadmaps" });
+=======
+    const userKey = await dbStore.resolveUserId(getSessionToken(req));
+    const saved = await dbStore.saveRoadmaps(userKey, req.body);
+    return res.json({ userKey, ...saved });
+  } catch (err) {
+    console.error("[Save Roadmaps Error]:", err);
+    return res.status(500).json({ error: "Failed to save roadmaps" });
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
   }
 });
 

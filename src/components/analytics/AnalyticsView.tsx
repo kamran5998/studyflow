@@ -310,9 +310,15 @@ export const AnalyticsView: React.FC = () => {
       {/* Top Header & Student Performance Report Actions */}
       <PageHeader
         kicker="LEDGER"
+<<<<<<< HEAD
         pill="ANALYTICS"
         pillTone="amber"
         title="Analytics"
+=======
+        pill="HOURS & ANALYTICS"
+        pillTone="amber"
+        title="StudyPilot Learning Analytics & Evaluation"
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         subtitle="Calculated strictly from recorded focus sessions, measured quiz attempts, syllabus progress, and scheduled study blocks."
         actions={
           <>
@@ -416,7 +422,11 @@ export const AnalyticsView: React.FC = () => {
               <div className="text-[11px] text-[#78736A] dark:text-[#A6A096] mt-1 font-mono tabular-nums">
                 {overview.taskCompletionRate !== null
                   ? `${overview.taskCompletionRate}% completion rate`
+<<<<<<< HEAD
                   : "Add tasks in Planner"}
+=======
+                  : "Add tasks in Daily Planner"}
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
               </div>
             </div>
 
@@ -644,7 +654,11 @@ export const AnalyticsView: React.FC = () => {
         {filteredHeatmapTopics.length === 0 ? (
           <div className="py-8 text-center text-xs text-[#78736A] dark:text-[#A6A096]">
             {analytics.topicMasteryHeatmap.length === 0
+<<<<<<< HEAD
               ? "Add syllabus topics in Subjects to view your Topic Mastery Heatmap."
+=======
+              ? "Add syllabus topics in Courses & Topics to view your Topic Mastery Heatmap."
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
               : "No topics match the selected course and mastery filter."}
           </div>
         ) : (
@@ -771,7 +785,11 @@ export const AnalyticsView: React.FC = () => {
                 Complete a practice quiz to chart your real score progression over time.
               </p>
               <PrimaryButton onClick={() => setActivePage("quizzes")}>
+<<<<<<< HEAD
                 Go to AI Practice Quiz
+=======
+                Go to Recall & Quizzes
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
               </PrimaryButton>
             </div>
           ) : (
@@ -1196,7 +1214,11 @@ export const AnalyticsView: React.FC = () => {
               No upcoming examinations configured
             </p>
             <p className="text-xs text-[#78736A] dark:text-[#A6A096]">
+<<<<<<< HEAD
               Add your upcoming exam dates in Exams to compute evidence-based readiness indicators.
+=======
+              Add your upcoming exam dates in Exam Timetable to compute evidence-based readiness indicators.
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
             </p>
             <SecondaryButton onClick={() => setActivePage("exams")}>
               Manage Exams

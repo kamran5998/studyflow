@@ -198,7 +198,11 @@ export const QuizGeneratorView: React.FC = () => {
         kicker="ACTIVE RECALL"
         pill="STUDY AIDS"
         pillTone="amber"
+<<<<<<< HEAD
         title="AI Practice Quiz"
+=======
+        title="Recall & Practice Quizzes"
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         subtitle="Generate tailored multiple-choice quizzes with detailed concept breakdowns and weak-topic synchronization."
         actions={
           activeQuestions && !quizResult ? (
@@ -235,7 +239,11 @@ export const QuizGeneratorView: React.FC = () => {
                 <div className="p-4 rounded-xl bg-[#FAF8F4] dark:bg-[#1B1A17] border border-[#E9E5DE] dark:border-[#32302B] text-xs text-[#78736A] dark:text-[#A6A096] space-y-2">
                   <p>No courses added yet. Add a course first to link recall quiz scores to your analytics.</p>
                   <SecondaryButton type="button" onClick={() => setActivePage("subjects")}>
+<<<<<<< HEAD
                     Go to Subjects
+=======
+                    Go to Courses & Topics
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
                   </SecondaryButton>
                 </div>
               ) : (

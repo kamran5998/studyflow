@@ -87,7 +87,11 @@ export const PlannerView: React.FC = () => {
         kickerLabel="TIMETABLE & SEQUENCING"
         kickerBadge="ACTIVE SEMESTER"
         kickerVariant="amber"
+<<<<<<< HEAD
         title="Planner"
+=======
+        title="Study Planner & Sequence Engine"
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         description="Balanced daily study blocks, syllabus priority allocation, and execution checklist."
         actions={
           <PrimaryButton id="add-task-btn" onClick={handleOpenAdd}>

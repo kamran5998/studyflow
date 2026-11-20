@@ -32,7 +32,11 @@ const QUICK_TOPICS = [
 
 export const RoadmapView: React.FC = () => {
   const { setActivePage, setQuizPreset, showToast } = useStudyFlow();
+<<<<<<< HEAD
   const { currentUser, isAuthReady, getIdToken } = useAuth();
+=======
+  const { currentUser, isAuthReady } = useAuth();
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
   const activeUserKey = currentUser?.id || "guest";
 
   const [inputTopic, setInputTopic] = useState("");
@@ -44,7 +48,11 @@ export const RoadmapView: React.FC = () => {
   // View Mode: visual (diagram flowchart) vs list (modules breakdown)
   const [viewMode, setViewMode] = useState<"visual" | "list">("visual");
 
+<<<<<<< HEAD
   // Saved roadmaps collection & completed topic IDs (persisted in Cloud SQL)
+=======
+  // Saved roadmaps collection & completed topic IDs (persisted on Express server)
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
   const [savedRoadmaps, setSavedRoadmaps] = useState<LearningRoadmap[]>([]);
   const [currentRoadmap, setCurrentRoadmap] = useState<LearningRoadmap | null>(null);
   const [completedTopicIds, setCompletedTopicIds] = useState<Record<string, boolean>>({});
@@ -66,6 +74,7 @@ export const RoadmapView: React.FC = () => {
     let cancelled = false;
     hydratedUserKeyRef.current = null;
 
+<<<<<<< HEAD
     if (!currentUser) {
       hydratedUserKeyRef.current = "guest";
       if (savedRoadmaps.length === 0) {
@@ -86,6 +95,11 @@ export const RoadmapView: React.FC = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+=======
+    (async () => {
+      try {
+        const res = await fetch("/api/roadmaps", { credentials: "include" });
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (cancelled) return;
@@ -122,16 +136,25 @@ export const RoadmapView: React.FC = () => {
     return () => {
       cancelled = true;
     };
+<<<<<<< HEAD
   }, [isAuthReady, activeUserKey, currentUser, getIdToken]);
 
   // Persist roadmaps and completed topics to Express backend
   useEffect(() => {
     if (!isAuthReady || !currentUser || hydratedUserKeyRef.current !== activeUserKey) return;
+=======
+  }, [isAuthReady, activeUserKey]);
+
+  // Persist roadmaps and completed topics to Express backend
+  useEffect(() => {
+    if (!isAuthReady || hydratedUserKeyRef.current !== activeUserKey) return;
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     const payload = JSON.stringify({ savedRoadmaps, completedTopicIds });
     if (payload === lastSavedSnapshotRef.current) return;
 
     const timer = setTimeout(async () => {
       try {
+<<<<<<< HEAD
         const token = await getIdToken();
         if (!token) return;
         const res = await fetch("/api/roadmaps", {
@@ -140,6 +163,12 @@ export const RoadmapView: React.FC = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+=======
+        const res = await fetch("/api/roadmaps", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
           body: payload,
         });
         if (res.ok) {
@@ -151,7 +180,11 @@ export const RoadmapView: React.FC = () => {
     }, 250);
 
     return () => clearTimeout(timer);
+<<<<<<< HEAD
   }, [isAuthReady, currentUser, activeUserKey, getIdToken, savedRoadmaps, completedTopicIds]);
+=======
+  }, [isAuthReady, activeUserKey, savedRoadmaps, completedTopicIds]);
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
 
   const handleGenerateRoadmap = async (topicToGen?: string) => {
     const topic = (topicToGen || inputTopic || "Python").trim();

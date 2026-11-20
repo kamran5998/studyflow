@@ -165,7 +165,11 @@ ${summaryResult.quickRevision.map((r) => `- ${r}`).join("\n")}`;
         kicker="LECTURE DIGEST"
         pill="STUDY AIDS"
         pillTone="amber"
+<<<<<<< HEAD
         title="AI Summarizer"
+=======
+        title="Lecture Notes & PDF Summarizer"
+>>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
         subtitle="Transform lecture slides, PDF chapters, or raw notes into structured study sheets and recall questions."
         actions={
           summaryResult ? (
