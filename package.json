@@ -1,3 +1,4 @@
+
 {
   "name": "studypilot-ai",
   "private": true,
@@ -18,15 +19,11 @@
   "dependencies": {
     "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.1.14",
-<<<<<<< HEAD
     "@types/pg": "^8.23.1",
-=======
->>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     "@vitejs/plugin-react": "^5.0.4",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
-<<<<<<< HEAD
     "drizzle-kit": "^0.31.11",
     "drizzle-orm": "^0.45.4",
     "express": "^4.21.2",
@@ -35,11 +32,6 @@
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "pg": "^8.23.1",
-=======
-    "express": "^4.21.2",
-    "lucide-react": "^0.546.0",
-    "motion": "^12.23.24",
->>>>>>> 9d281b97efabd4f9d488c8bc37687c9b1dfe9f78
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "recharts": "^3.10.1",
